@@ -9,3 +9,9 @@ node_modules
 
 # dist files
 dist
+
+# firebase credentials
+muhilan-firebase.json
+
+# extra html files
+src/views/extras/

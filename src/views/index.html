@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+        .login-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 300px;
+            text-align: center;
+        }
+        h2 { margin-bottom: 20px; color: #333; }
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .google-btn {
+            background-color: #4285F4;
+            color: white;
+        }
+        .google-btn:hover { background-color: #357ae8; }
+        .firebase-btn {
+            background-color: #FFCA28;
+            color: #333;
+        }
+        .firebase-btn:hover { background-color: #ffc107; }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        #firebase-login-form {
+            display: none;
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .submit-btn:hover { background-color: #45a049; }
+        #status-message {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Welcome</h2>
+    
+    <!-- Google Login: Calls the backend endpoint directly -->
+    <a href="/auth/google" style="text-decoration: none;">
+        <button class="google-btn">Sign in with Google</button>
+    </a>
+
+    <!-- Firebase Login: Toggles the form -->
+    <button class="firebase-btn" onclick="toggleFirebaseForm()">Sign in with Firebase</button>
+
+    <div id="firebase-login-form">
+        <form id="loginForm">
+            <div class="form-group">
+                <input type="email" id="email" name="email" placeholder="Email Address" required>
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" name="password" placeholder="Password" required>
+            </div>
+            <button type="submit" class="submit-btn">Login</button>
+        </form>
+    </div>
+    <div id="status-message"></div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    // --- Firebase Configuration ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyD3c8wQ0_lVOKOPuM9pjG04bkwp44Hyb8M",
+        authDomain: "muhilan-firebase.firebaseapp.com",
+        projectId: "muhilan-firebase",
+        storageBucket: "muhilan-firebase.firebasestorage.app",
+        messagingSenderId: "621978941059",
+        appId: "1:621978941059:web:61a8c1d627def0ca0a4db6",
+        measurementId: "G-MYYJMB8XVV"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // --- UI Functions ---
+
+    // Expose function to global scope so onclick can find it
+    window.toggleFirebaseForm = function() {
+        const form = document.getElementById('firebase-login-form');
+        form.style.display = form.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Handle the Firebase login form submission
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const statusDiv = document.getElementById('status-message');
+
+        statusDiv.textContent = 'Logging in with Firebase...';
+        statusDiv.style.color = '#666';
+
+        try {
+            // 1. Sign in on the client-side using the Firebase SDK
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            statusDiv.textContent = 'Firebase login successful! Getting token...';
+
+            // 2. Get the ID token from the authenticated user
+            const token = await userCredential.user.getIdToken();
+            statusDiv.textContent = 'Token received! Calling backend...';
+
+            // 3. Call your protected backend endpoint with the token
+            const backendResponse = await fetch('/auth/profile', {
+                method: 'GET', // Your endpoint is a GET request
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                },
+            });
+
+            const backendResult = await backendResponse.text();
+
+            if (backendResponse.ok) {
+                document.open();
+                document.write(backendResult);
+                document.close();
+            } else {
+                statusDiv.textContent = 'Backend Error: ' + backendResult;
+                statusDiv.style.color = 'red';
+            }
+        } catch (error) {
+            const errorMessage = error.code ? `Firebase Error: ${error.message}` : `Error: ${error.message}`;
+            statusDiv.textContent = errorMessage;
+            statusDiv.style.color = 'red';
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,36 +1,37 @@
-# 🚀 Task 005 – Google OAuth2.0 Authentication
+# 🚀 Task 005 – Google & Firebase Authentication
 
 ## 📖 Overview
-This project implements **Social Authentication** using **Google OAuth2.0** within a **NestJS** application. It demonstrates how to integrate third-party login providers using **Passport.js**, allowing users to sign in with their Google accounts. It serves as the fifth technical task for the **Skandavel Webtech Internship**.
+This project implements a dual authentication system in an **Express.js** application. It supports **Social Login** via **Google OAuth2.0** (using Passport.js) and traditional **Email/Password Authentication** handled client-side by the **Firebase JS SDK** and verified by the **Firebase Admin SDK** on the backend. It serves as the fifth technical task for the **Skandavel Webtech Internship**.
 
-The application handles the OAuth handshake, validates credentials with Google, and processes user profile information.
+The application provides a unified login page and demonstrates handling both server-side (OAuth) and client-side (Firebase) authentication flows to protect backend resources.
 
 ## 🎯 Objective (Why?)
 This task was created to:
 - Implement **OAuth2.0** authentication flow.
-- Demonstrate proficiency with **Passport.js** strategies (`passport-google-oauth20`).
-- Manage external API credentials (Client ID and Secret).
-- Handle authentication callbacks and user profile extraction.
+- Implement client-side authentication with Firebase and JWT validation on the backend.
+- Integrate multiple authentication strategies using **Passport.js** and custom middleware.
+- Manage external API credentials for both Google and Firebase.
 
 ## 🛠️ Tech Stack
 - **Language**: TypeScript
 - **Runtime**: Node.js
-- **Framework**: NestJS
-- **Authentication**: Passport.js (`passport-google-oauth20`)
+- **Framework**: Express.js
+- **Authentication**: Passport.js (`passport-google-oauth20`), Firebase Admin SDK, Firebase JS SDK
 - **Tools**: Postman (for testing), Dotenv (for configuration)
 
 ## ✨ Features
-- **Google Login**: Redirects users to Google's secure login page.
-- **OAuth Callback**: Securely handles the response from Google.
-- **Profile Retrieval**: Accesses basic user profile information (email, name, photo) upon successful login.
+- **Unified Login Page**: A single UI to choose between Google or Email/Password login.
+- **Google Login**: Server-side OAuth 2.0 flow redirects users to Google's secure login page.
+- **Firebase Login**: Client-side login with email/password using the Firebase SDK.
+- **Protected Route**: A `/profile` endpoint is protected and can only be accessed by providing a valid Firebase ID token in the `Authorization` header.
 
 ## ⚙️ Installation & Setup
 
 ### 1. Prerequisites
 Ensure you have the following installed:
 - Node.js
-- NestJS CLI (Optional but recommended)
-- A Google Cloud Console Project with OAuth credentials.
+- A Google Cloud Project with OAuth 2.0 credentials.
+- A Firebase Project with Authentication enabled (Email/Password provider).
 
 ### 2. Navigate to the Directory
 ```bash
