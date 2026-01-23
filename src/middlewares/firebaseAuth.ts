@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import admin from "../strategies/firebase";
-import { decode } from "node:punycode";
 
 export async function firebaseAuth(req: Request, res: Response, next: NextFunction) {
   const token = req.headers.authorization?.replace("Bearer ", "");

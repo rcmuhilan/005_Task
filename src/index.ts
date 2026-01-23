@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import passport from "passport";
 import authRouter from "./routes/auth";
 dotenv.config();
-require('./strategies/google');
+require('./strategies/oauth-google');
 const session = require('express-session')
 const store = new session.MemoryStore();
 import { join } from 'path';
