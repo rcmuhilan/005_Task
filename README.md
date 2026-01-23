@@ -33,6 +33,8 @@ Ensure you have the following installed:
 - A Google Cloud Project with OAuth 2.0 credentials.
 - A Firebase Project with Authentication enabled (Email/Password provider).
 
+> **⚠️ Note:** Any Firebase configuration keys or IDs visible in the source code are **not legitimate**. You must replace them with your own valid credentials from your Firebase Console.
+
 ### 2. Navigate to the Directory
 ```bash
 cd 005_Task
