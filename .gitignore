@@ -1,0 +1,17 @@
+# Dependency directories
+node_modules
+
+# Optional npm cache directory
+.npm
+
+# Environment variables file
+.env
+
+# dist files
+dist
+
+# firebase credentials
+muhilan-firebase.json
+
+# extra html files
+src/views/extras/
